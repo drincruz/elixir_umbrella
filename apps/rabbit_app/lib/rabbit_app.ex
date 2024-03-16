@@ -1,12 +1,15 @@
+require Logger
+
 defmodule RabbitApp do
   @moduledoc """
   Documentation for `RabbitApp`.
   """
 
+  @spec send_message(AMQP.Channel.t(), binary()) :: :ok
   def send_message(channel, message) do
     AMQP.Basic.publish(channel, "", "hello", message)
 
-    IO.puts " [x] Sent #{message}"
+    Logger.info " [x] Sent #{message}"
   end
 
   @spec run() :: :ok | {:error, :blocked | :closing}
@@ -16,18 +19,5 @@ defmodule RabbitApp do
     send_message(channel, "Hello, world!")
 
     AMQP.Connection.close(connection)
-  end
-
-  @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> RabbitApp.hello()
-      :world
-
-  """
-  def hello do
-    :world
   end
 end
